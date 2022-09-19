@@ -29,7 +29,7 @@ MEL.MC,Melia Hotels International S.A.
 MRL.MC,MERLIN Properties SOCIMI S.A.
 NTGY.MC,Naturgy Energy Group S.A.
 PHM.MC,Pharma Mar S.A.
-REE.MC,Red Electrica Corporacion S.A.
+RED.MC,Red Electrica Corporacion S.A.
 REP.MC,Repsol S.A.
 SGRE.MC,Siemens Gamesa Renewable Energy S.A.
 SLR.MC,Solaria Energia y Medio Ambiente SLRS
