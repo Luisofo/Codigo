@@ -227,6 +227,9 @@ def backtest_1day_hold_open(open,close,returns,predictions,verbose=0,show_market
     win=0
     loss=0
 
+    open=open.shift(-1)
+    close=close.shift(-1)
+
     for open_price,close_price,pred in zip(open,close,predictions):
         if pred == 1:
             # Go Long for the day
@@ -243,10 +246,13 @@ def backtest_1day_hold_open(open,close,returns,predictions,verbose=0,show_market
 
         else:
             # Go Short for the day
-            amount_at_close = 1.0 * (1.0+(-1.0*(close_price/open_price)))
+            if open_price > close_price:
+                amount_at_close = 1.0 * (open_price / close_price)
+            else:
+                amount_at_close = 1.0 - ((close_price/open_price)-1.0)
             equity_change = amount_at_close - 1
             cum_ret += equity_change
-            if equity_change<0:
+            if equity_change < 0:
                 win+=1
             else:
                 loss+=1
