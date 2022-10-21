@@ -25,7 +25,7 @@ def backtest_1day_hold(returns,predictions,verbose=0,show_market=0,label=None):
 
         else:
             # Go Short for the day
-            amount_at_close = 1.0 * (1.0+abs(ret))
+            amount_at_close = 1.0 * (1.0+(-1.0*ret))
             equity_change = amount_at_close - 1
             cum_ret += equity_change
             if ret<0:
@@ -48,7 +48,7 @@ def backtest_1day_hold(returns,predictions,verbose=0,show_market=0,label=None):
 
 
     plt.plot(range(i),equity,label=label)
-    print('Win rate:' ,win/i)
+    print('Win rate: ({})'.format(label) ,win/i)
 
 
 
@@ -217,3 +217,54 @@ def backtest_1day_hold_train_test_market(train_returns,train_predictions,test_re
     plt.plot(indices_train,equity_train)
     plt.plot(indices_test,equity_test)
     plt.plot(range(len(market_equity)),market_equity)
+
+def backtest_1day_hold_open(open,close,returns,predictions,verbose=0,show_market=0,label=None):
+
+    cum_ret = 1 # Al empezar hemos ganado 0
+    equity = list() # 0 a nuestro dinero
+    equity.append(cum_ret)
+    i=1
+    win=0
+    loss=0
+
+    for open_price,close_price,pred in zip(open,close,predictions):
+        if pred == 1:
+            # Go Long for the day
+            amount_at_close = 1.0 * (close_price/open_price)
+            equity_change = amount_at_close - 1
+            cum_ret += equity_change
+            if equity_change>=0:
+                win+=1
+            else:
+                loss+=1
+            if(verbose):
+                print('Day ',i,'Going long : Amount betted: 1 Open:',open_price,'Close:',close_price,' End amount:',amount_at_close,
+                      'Equity change:',equity_change,'Equity:',cum_ret)
+
+        else:
+            # Go Short for the day
+            amount_at_close = 1.0 * (1.0+(-1.0*(close_price/open_price)))
+            equity_change = amount_at_close - 1
+            cum_ret += equity_change
+            if equity_change<0:
+                win+=1
+            else:
+                loss+=1
+            if(verbose):
+                print('Day ', i, 'Going short : Amount betted: 1 Open:', open_price, 'Close:', close_price,
+                      ' End amount:', amount_at_close,'Equity change:', equity_change, 'Equity:', cum_ret)
+
+        equity.append(cum_ret)
+        i+=1
+
+    if(show_market):
+        market_equity = []
+        market_equity.append(1)
+
+        for ret in returns:
+            market_equity.append(market_equity[-1]*(1+ret))
+        plt.plot(range(len(market_equity)),market_equity,label='S&P500')
+
+
+    plt.plot(range(i),equity,label=label)
+    print('Win rate: ({})'.format(label) ,win/i)
