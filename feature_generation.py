@@ -394,7 +394,8 @@ def alpha38(df):
 def alpha39(df):
     """
     Alpha#39
-
+    -rank(ts_delta(close, 7) * (1 - rank(ts_weighted_mean(volume / adv20, 9)))) *
+    (1 + rank(ts_sum(returns, 250)))
     """
     temp = (-1 * u.rank((u.delta(df.Close, 7) * (1 - u.rank(u.decay_linear((df.Volume / u.adv(df, 20)), 9))))))
     return (temp * (1 + u.rank(u.ts_sum(df.returns, 250))))
